@@ -2,15 +2,10 @@
 package View.persistence.files;
 
 import Model.Image;
+import Model.ProxyImage;
 import View.persistence.ImageLoader;
-import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileFilter;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 
 public class FileImageLoader implements ImageLoader {
@@ -29,27 +24,11 @@ public class FileImageLoader implements ImageLoader {
     }
 
     @Override
-    public Image load() {       
-        return new Image() {
-            @Override
-            public String name() {
-                return files[current].getName();
-            }
-
-            @Override
-            public InputStream stream() {
-                try {
-                    return new BufferedInputStream
-                            (new FileInputStream(files[current]));
-                } catch (FileNotFoundException ex) {
-                    Logger.getLogger(FileImageLoader.class.getName()).
-                            log(Level.SEVERE, null, ex);
-                    return null;
-                }
-            }
-        };
+    public Image load() {      
+        return new ProxyImage(this.files[this.current]);
     }
 
+ 
     @Override
     public Image next() {
         if (current == this.files.length-1){
